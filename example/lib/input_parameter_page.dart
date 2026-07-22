@@ -42,8 +42,10 @@ class _InputParameterPageState extends State<InputParameterPage> {
           },
         }),
       );
+      print('Liveness link statusCode: ${data.statusCode} ');
       if (data.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(data.body);
+        print('Liveness link response Data : ${responseData}');
         if (responseData['code'] == 200) {
           String link = responseData['data'];
           print('Liveness link created successfully: $link');

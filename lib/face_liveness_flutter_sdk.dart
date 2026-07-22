@@ -1,6 +1,10 @@
 import 'dart:collection';
-
+import 'dart:convert';
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+import 'package:face_liveness_flutter_sdk/models/face_liveness_env.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_error_model.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_flow.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_screen_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,6 +17,9 @@ class FaceLivenessWidget extends StatefulWidget {
     this.logoUrl,
     this.secureLabel,
     this.backendUrl,
+    this.origin,
+    this.tenant,
+    this.flow,
     this.onSuccess,
     this.onFail,
     this.onError,
@@ -24,7 +31,7 @@ class FaceLivenessWidget extends StatefulWidget {
   });
 
   /// Selects the FTA backend URL + bundled Cognito config. Default 'prod'.
-  final String? env;
+  final FaceLivenessEnv? env;
 
   /// Preferred short-lived bearer token for backend session APIs.
   final String? launchToken;
@@ -36,6 +43,15 @@ class FaceLivenessWidget extends StatefulWidget {
 
   /// Override the environment's default FTA backend URL.
   final String? backendUrl;
+
+  /// Optional origin/domain sent to the backend.
+  final String? origin;
+
+  /// Backend tenant namespace. Defaults to `'unifi'`.
+  final String? tenant;
+
+  /// Flow behavior, independent from visual theme.
+  final LivenessFlow? flow;
 
   ///Fired when liveness passes (`result.passed === true`).
   final void Function(LivenessResultModel? result)? onSuccess;
@@ -53,7 +69,7 @@ class FaceLivenessWidget extends StatefulWidget {
   final void Function()? onAnalysisComplete;
 
   /// Fired on every screen transition (telemetry).
-  final void Function()? onScreenChange;
+  final void Function(LivenessScreenType?)? onScreenChange;
 
   /// When provided, renders a "Continue" button on the success screen that calls this.
   final void Function()? onContinue;
@@ -63,12 +79,25 @@ class FaceLivenessWidget extends StatefulWidget {
 }
 
 class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
+  Map<String, dynamic> get parameter {
+    return {
+      'env': widget.env?.name,
+      'launchToken': widget.launchToken,
+      'logoUrl': widget.logoUrl,
+      'secureLabel': widget.secureLabel,
+      'backendUrl': widget.backendUrl,
+      'origin': widget.origin,
+      'tenant': widget.tenant,
+      'flow': widget.flow,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      // initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
-      initialFile:
-          'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
+      initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
+      // initialFile:
+      //     'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
       initialSettings: InAppWebViewSettings(
         mediaPlaybackRequiresUserGesture: false,
         allowsInlineMediaPlayback: true,
@@ -82,12 +111,10 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
         UserScript(
           source:
               """
-                window.__INITIAL_NATIVE_DATA__ = {
-                      env: '${widget.env}',
-                      launchToken: '${widget.launchToken}',
-                      logoUrl: '${widget.logoUrl}',
-                      secureLabel: '${widget.secureLabel}',
-                    };
+                const data = JSON.parse('${jsonEncode(parameter)}', (key, value) => {
+                          return value === null ? undefined : value;
+                        });
+                window.__INITIAL_NATIVE_DATA__ = data;
               """,
           injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
         ),
@@ -122,26 +149,37 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
         controller.addJavaScriptHandler(
           handlerName: 'onError',
           callback: (args) {
-            print('onError called with args: $args');
+            if (args.isNotEmpty &&
+                args.first is Map &&
+                (args.first as Map).containsKey('error')) {
+              widget.onError?.call(
+                LivenessErrorModel.fromJson(args.first['error']),
+              );
+            }
           },
         );
         controller.addJavaScriptHandler(
           handlerName: 'onCancel',
           callback: (args) {
-            print('onCancel called with args: $args');
             widget.onCancel?.call();
           },
         );
         controller.addJavaScriptHandler(
           handlerName: 'onAnalysisComplete',
           callback: (args) {
-            print('onAnalysisComplete called with args: $args');
+            widget.onAnalysisComplete?.call();
           },
         );
         controller.addJavaScriptHandler(
           handlerName: 'onScreenChange',
           callback: (args) {
-            print('onScreenChange called with args: $args');
+            if (args.isNotEmpty &&
+                args.first is Map &&
+                (args.first as Map).containsKey('screen')) {
+              widget.onScreenChange?.call(
+                LivenessScreenType.from(args.first['screen']),
+              );
+            }
           },
         );
         controller.addJavaScriptHandler(
