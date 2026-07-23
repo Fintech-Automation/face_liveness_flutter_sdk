@@ -1,5 +1,6 @@
 import 'package:example/face_liveness_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -14,8 +15,24 @@ class InputParameterPage extends StatefulWidget {
 class _InputParameterPageState extends State<InputParameterPage> {
   TextEditingController token = TextEditingController(
     text:
-        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmtSazVWbXRBaXU2a19NTXQySHZ1WGJrbHBob2ZSSEZtbHFGbnl1bTdMTWciLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NDgxOTg1NSwiZXhwIjoxNzg0ODI3MDU1LCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODQ4MTk4NTEsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.E1GdlKGPqFOyH2hM6KuImZ4A-aGcPXLQfmGt-M2U0ANuUA_iCnQPSIegJWFbdR45mMfusGKzP_x6wcawCgdnmzykcG6g2jF5ojLLIIK-T9meDF53kKEtWXjdZq8tOWfHsS2YKY9a3F2DZvC6Cz0M39JKBE4LdJoI1w7aJ4sIFutUTamG523wSzcagvla0D2l5T7Ujx9DS80aBTTcdJG4bO6h3M5MAzEbHYJf44zRz1a1ZsYn6cujtiZ0lBqPfOkjxjfXS0wis5m0RoH9vhb6GDLZ5f1x7s-ju3RZR-v41CWnqKPr3aCNfYy32FIOYkenoIKQGL_Sn0FpHX9FsCW9Pg',
+        'Bearer eyJraWQiOiIzY2E2MTI0MC01MzVkLTQyZDAtYmVjMy05NzZiNTk4ZmEwZTAiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwb2FoZTUzajZ2bUJteTlKUTFkNyIsImF1ZCI6Imh0dHBzOi8vYXBpLmZpbnRlY2hhdXRvbWF0aW9uLmNvbSIsImNsaWVudElkIjoiMG9haGU1M2o2dm1CbXk5SlExZDciLCJleHBpcmVUaW1lIjoxNzg0ODMzOTg0LCJpc3MiOiJodHRwczovL2FwaS5maW50ZWNoYXV0b21hdGlvbi5jb20iLCJzZkNvbnRhY3RJZCI6IjI0MTAxMDE5NTg0OTk0MTMzMCIsImV4cCI6MTc4NDgzMzk4NCwiaWF0IjoxNzg0ODI2Nzg0LCJjaWQiOiIwb2FoZTUzajZ2bUJteTlKUTFkNyJ9.FGBCbPvL0bPiFgmmgo0uB7MCJviLZNWfrdYu243aH0pRWT8auxjaD_YCtimrcUOBnqL2FlQwraQi5FnYHcoc0F3N0IkDd0G-yNMzQybKdauvfgVP_S4ERI7MK5FM_f2uVpBjl4fA_mquDKfQgQUF_Bh45OpVbhM27mB14VAloAsn4aXCEFQxrG1k_RyGzAVMKc38jdEMOLuLTXkMqrjfZEJeR2Qcbd5yMfDjkw8mtbQptmoHGT5phBiwF_nxUl4c44h2KFqsVGjSY9GFHczPpn6tK_hPsemo2BU-uMYP_wQxaQToaZVBUfI0_fDHpBODgUQPQm0lBmroFHx0_ggTDA',
   );
+
+  TextEditingController brandName = TextEditingController();
+  TextEditingController brandLogoUrl = TextEditingController(
+    text:
+        'https://accloud-public-storage-dev1.s3.us-east-2.amazonaws.com/REx0xk8bC8_tenants/GBX/Fintech_6_pwo4ga.png',
+  );
+  TextEditingController brandSecureLabel = TextEditingController();
+
+  bool skipIntro = false;
+  bool skipPrepare = false;
+
+  Color? primaryColor;
+  Color? secondaryColor;
+  Color? headingColor;
+
+  String? errorString;
 
   bool loading = false;
   Future<String?> createLivenessLink() async {
@@ -30,7 +47,7 @@ class _InputParameterPageState extends State<InputParameterPage> {
           'Authorization': token.text,
         },
         body: jsonEncode({
-          'external_id': 'annijsuklsssiu',
+          'external_id': DateTime.now().microsecondsSinceEpoch,
           'public_link': 'http://localhost:5173/',
           'api_domain': 'https://api-dev.accelerationcloud.info',
           'callback_url': 'http://localhost:5173/',
@@ -60,19 +77,74 @@ class _InputParameterPageState extends State<InputParameterPage> {
             print('Failed to create liveness link: Link is empty');
           }
         } else {
-          print(
-            'Failed to create liveness link: ${responseData['message'] ?? 'Unknown error'}',
-          );
+          setState(() {
+            errorString = responseData['error_message'];
+          });
         }
       } else {
-        print('Failed to create liveness link: ${data.statusCode}');
+        setState(() {
+          errorString = data.body;
+        });
       }
     } on SocketException catch (e) {
-      print('Failed to create liveness link: ${e.message}');
+      setState(() {
+        errorString = e.message;
+      });
     } on http.ClientException catch (e) {
-      print('Failed to create liveness link: ${e.message}');
+      setState(() {
+        errorString = e.message;
+      });
     }
     return null;
+  }
+
+  String? valueOrEmpty(String value) {
+    if (value.isNotEmpty) {
+      return value;
+    }
+    return null;
+  }
+
+  Future<Color?> selectColors(BuildContext context) async {
+    Color? color;
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color!'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: Colors.white,
+              onColorChanged: (Color value) {
+                color = value;
+              },
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Got it'),
+              onPressed: () {
+                Navigator.of(context).pop(color);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget selectColorWidget({
+    required String title,
+    Color? color,
+    void Function()? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: ColoredBox(
+        color: color ?? Colors.transparent,
+        child: Container(padding: EdgeInsets.all(12), child: Text(title)),
+      ),
+    );
   }
 
   @override
@@ -83,14 +155,102 @@ class _InputParameterPageState extends State<InputParameterPage> {
         child: ListView(
           padding: EdgeInsets.all(12),
           children: [
+            if (errorString?.isNotEmpty == true)
+              Text(
+                'Error: $errorString',
+                style: TextStyle(color: Colors.red, fontSize: 20),
+              ),
             TextFormField(
               controller: token,
+              maxLines: 5,
+              minLines: 1,
               decoration: InputDecoration(label: Text('Token')),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Brand',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            TextFormField(
+              controller: brandName,
+              decoration: InputDecoration(label: Text('Name')),
+            ),
+            TextFormField(
+              controller: brandLogoUrl,
+              maxLines: 5,
+              minLines: 1,
+              decoration: InputDecoration(label: Text('Logo Url')),
+            ),
+            TextFormField(
+              controller: brandSecureLabel,
+              decoration: InputDecoration(label: Text('Secure Label')),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Flow',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SwitchListTile(
+              title: Text('Skip Intro'),
+              value: skipIntro,
+              onChanged: (value) {
+                setState(() {
+                  skipIntro = value;
+                });
+              },
+            ),
+            SwitchListTile(
+              title: Text('Skip Prepare'),
+              value: skipPrepare,
+              onChanged: (value) {
+                setState(() {
+                  skipPrepare = value;
+                });
+              },
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Theme',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            selectColorWidget(
+              title: 'Primary',
+              color: primaryColor,
+              onTap: () {
+                selectColors(context).then(
+                  (value) => setState(() {
+                    primaryColor = value;
+                  }),
+                );
+              },
+            ),
+            selectColorWidget(
+              title: 'Secondary Color',
+              color: secondaryColor,
+              onTap: () {
+                selectColors(context).then(
+                  (value) => setState(() {
+                    secondaryColor = value;
+                  }),
+                );
+              },
+            ),
+            selectColorWidget(
+              title: 'Heading Color',
+              color: headingColor,
+              onTap: () {
+                selectColors(context).then(
+                  (value) => setState(() {
+                    headingColor = value;
+                  }),
+                );
+              },
             ),
             ElevatedButton(
               onPressed: loading
                   ? null
                   : () async {
+                      FocusScope.of(context).unfocus();
                       setState(() {
                         loading = true;
                       });
@@ -103,8 +263,37 @@ class _InputParameterPageState extends State<InputParameterPage> {
                           // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                FaceLivenessPage(launchToken: launchToken!),
+                            builder: (context) => FaceLivenessPage(
+                              launchToken: launchToken!,
+                              brandName: valueOrEmpty(brandName.text),
+                              brandLogoUrl: valueOrEmpty(brandLogoUrl.text),
+                              brandSecureLabel: valueOrEmpty(
+                                brandSecureLabel.text,
+                              ),
+                              skipIntro: skipIntro,
+                              skipPrepare: skipPrepare,
+                              primary: primaryColor != null
+                                  ? colorToHex(
+                                      primaryColor!,
+                                      includeHashSign: true,
+                                      enableAlpha: false,
+                                    )
+                                  : null,
+                              secondary: secondaryColor != null
+                                  ? colorToHex(
+                                      secondaryColor!,
+                                      includeHashSign: true,
+                                      enableAlpha: false,
+                                    )
+                                  : null,
+                              heading: headingColor != null
+                                  ? colorToHex(
+                                      headingColor!,
+                                      includeHashSign: true,
+                                      enableAlpha: false,
+                                    )
+                                  : null,
+                            ),
                           ),
                         );
                       }

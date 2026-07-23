@@ -6,9 +6,30 @@ import 'package:face_liveness_flutter_sdk/models/liveness_theme.dart';
 import 'package:flutter/material.dart';
 
 class FaceLivenessPage extends StatefulWidget {
-  const FaceLivenessPage({required this.launchToken, super.key});
+  const FaceLivenessPage({
+    required this.launchToken,
+    this.brandName,
+    this.brandLogoUrl,
+    this.brandSecureLabel,
+    this.skipIntro = false,
+    this.skipPrepare = false,
+    this.primary,
+    this.secondary,
+    this.heading,
+    super.key,
+  });
 
   final String launchToken;
+  final String? brandName;
+  final String? brandLogoUrl;
+  final String? brandSecureLabel;
+
+  final bool skipIntro;
+  final bool skipPrepare;
+
+  final String? primary;
+  final String? secondary;
+  final String? heading;
 
   @override
   State<FaceLivenessPage> createState() => _FaceLivenessPageState();
@@ -23,22 +44,23 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
         env: FaceLivenessEnv.dev,
         launchToken: widget.launchToken,
         brand: LivenessBrand(
-          // name: 'ZXC',
-          logoUrl: Uri.parse(
-            'https://accloud-public-storage-dev1.s3.us-east-2.amazonaws.com/REx0xk8bC8_tenants/GBX/Fintech_6_pwo4ga.png',
-          ),
-          secureLabel: 'ZXC',
+          name: widget.brandName,
+          logoUrl: widget.brandLogoUrl?.isNotEmpty == true
+              ? Uri.parse(widget.brandLogoUrl!)
+              : null,
+          secureLabel: widget.brandSecureLabel,
         ),
         // backendUrl: 'https://your-backend.example.com',
         // tenant: 'actc',
-        flow: LivenessFlow(skipIntro: false, skipPrepare: false),
+        flow: LivenessFlow(
+          skipIntro: widget.skipIntro,
+          skipPrepare: widget.skipPrepare,
+        ),
         theme: LivenessTheme(
           colors: LivenessThemeColors(
-            primary: '#1d4ed8',
-            secondary: '#b33563',
-            heading: '#2cb445',
-            body: '#000000',
-            card: '#fefefe',
+            primary: widget.primary,
+            secondary: widget.secondary,
+            heading: widget.heading,
           ),
           shape: LivenessThemeShape(radius: 100),
           typography: LivenessThemeTypography(
