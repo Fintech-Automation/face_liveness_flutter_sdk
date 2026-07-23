@@ -23,8 +23,8 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
         logoUrl:
             'https://accloud-public-storage-dev1.s3.us-east-2.amazonaws.com/REx0xk8bC8_tenants/GBX/Fintech_6_pwo4ga.png',
         secureLabel: 'ZXC',
-        backendUrl: 'https://your-backend.example.com',
-        tenant: 'actc',
+        // backendUrl: 'https://your-backend.example.com',
+        // tenant: 'actc',
         flow: LivenessFlow(skipIntro: true, skipPrepare: false),
         onSuccess: (result) {
           print('Liveness check succeeded: ${result?.toJson()}');
