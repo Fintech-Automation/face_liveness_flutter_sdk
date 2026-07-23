@@ -9,6 +9,7 @@ class LivenessFlow {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = {};
+
     data['skipIntro'] = skipIntro;
     data['skipPrepare'] = skipPrepare;
     return data;

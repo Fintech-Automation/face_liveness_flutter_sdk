@@ -1,9 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:face_liveness_flutter_sdk/models/face_liveness_env.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_brand.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_error_model.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_flow.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_localization.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_screen_type.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,12 +16,14 @@ class FaceLivenessWidget extends StatefulWidget {
   const FaceLivenessWidget({
     this.env,
     this.launchToken,
-    this.logoUrl,
-    this.secureLabel,
+    this.brand,
     this.backendUrl,
     this.origin,
     this.tenant,
     this.flow,
+    this.theme,
+    this.localization,
+    this.captureText,
     this.onSuccess,
     this.onFail,
     this.onError,
@@ -35,10 +40,8 @@ class FaceLivenessWidget extends StatefulWidget {
   /// Preferred short-lived bearer token for backend session APIs.
   final String? launchToken;
 
-  /// Optional brand mark shown in the top-left wrapper chrome. It is an image URL.
-  final String? logoUrl;
-
-  final String? secureLabel;
+  /// Brand shown in the SDK chrome.
+  final LivenessBrand? brand;
 
   /// Override the environment's default FTA backend URL.
   final String? backendUrl;
@@ -51,6 +54,15 @@ class FaceLivenessWidget extends StatefulWidget {
 
   /// Flow behavior, independent from visual theme.
   final LivenessFlow? flow;
+
+  ///  Visual system tokens grouped by concern.
+  final LivenessTheme? theme;
+
+  /// SDK-owned screen copy, grouped by screen.
+  final LivenessLocalization? localization;
+
+  /// Text overrides for the camera/capture step.
+  final Map<String, String>? captureText;
 
   ///Fired when liveness passes (`result.passed === true`).
   final void Function(LivenessResultModel? result)? onSuccess;
@@ -82,21 +94,23 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
     return {
       'env': widget.env?.name,
       'launchToken': widget.launchToken,
-      'logoUrl': widget.logoUrl,
-      'secureLabel': widget.secureLabel,
+      'brand': widget.brand?.toJson(),
       'backendUrl': widget.backendUrl,
       'origin': widget.origin,
       'tenant': widget.tenant,
       'flow': widget.flow,
+      'theme': widget.theme?.toJson(),
+      'localization': widget.localization?.toJson(),
+      'captureText': widget.captureText,
     };
   }
 
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      // initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
-      initialFile:
-          'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
+      initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
+      // initialFile:
+      //     'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
       initialSettings: InAppWebViewSettings(
         mediaPlaybackRequiresUserGesture: false,
         allowsInlineMediaPlayback: true,
@@ -110,9 +124,7 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
         UserScript(
           source:
               """
-                const data = JSON.parse('${jsonEncode(parameter)}', (key, value) => {
-                          return value === null ? undefined : value;
-                        });
+                const data = JSON.parse('${jsonEncode(parameter)}', (k, v) => v === null ? undefined : v);
                 window.__INITIAL_NATIVE_DATA__ = data;
               """,
           injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
