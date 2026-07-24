@@ -1,4 +1,5 @@
 import 'package:example/face_liveness_page.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,7 @@ class InputParameterPage extends StatefulWidget {
 class _InputParameterPageState extends State<InputParameterPage> {
   TextEditingController token = TextEditingController(
     text:
-        'Bearer eyJraWQiOiIzY2E2MTI0MC01MzVkLTQyZDAtYmVjMy05NzZiNTk4ZmEwZTAiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwb2FoZTUzajZ2bUJteTlKUTFkNyIsImF1ZCI6Imh0dHBzOi8vYXBpLmZpbnRlY2hhdXRvbWF0aW9uLmNvbSIsImNsaWVudElkIjoiMG9haGU1M2o2dm1CbXk5SlExZDciLCJleHBpcmVUaW1lIjoxNzg0ODMzOTg0LCJpc3MiOiJodHRwczovL2FwaS5maW50ZWNoYXV0b21hdGlvbi5jb20iLCJzZkNvbnRhY3RJZCI6IjI0MTAxMDE5NTg0OTk0MTMzMCIsImV4cCI6MTc4NDgzMzk4NCwiaWF0IjoxNzg0ODI2Nzg0LCJjaWQiOiIwb2FoZTUzajZ2bUJteTlKUTFkNyJ9.FGBCbPvL0bPiFgmmgo0uB7MCJviLZNWfrdYu243aH0pRWT8auxjaD_YCtimrcUOBnqL2FlQwraQi5FnYHcoc0F3N0IkDd0G-yNMzQybKdauvfgVP_S4ERI7MK5FM_f2uVpBjl4fA_mquDKfQgQUF_Bh45OpVbhM27mB14VAloAsn4aXCEFQxrG1k_RyGzAVMKc38jdEMOLuLTXkMqrjfZEJeR2Qcbd5yMfDjkw8mtbQptmoHGT5phBiwF_nxUl4c44h2KFqsVGjSY9GFHczPpn6tK_hPsemo2BU-uMYP_wQxaQToaZVBUfI0_fDHpBODgUQPQm0lBmroFHx0_ggTDA',
+        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULnM1WGc5OWc4VFNXWWFXVWNlYTFOY2thOU5ZOTRqcUQyU3N4TS1FU1Z1dzAiLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NDg4Mzg4NSwiZXhwIjoxNzg0ODkxMDg1LCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODQ4ODM4NzgsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.lYEJGYdwHwpYHLRAk4v5TcngTriokBU5UB4nw4RB8i7vuSei2Jy5whPZcg6K4agQxsG0q6_OcHxEp0tnAR8s3t82Gk1QELYdIf12RpqqDrUpn6bl-y2bCEbKbdXL5IMNUcT3mg-YeBWFMhYtoRsH3vFldVLzuHLjgt1mOfIYXmI8Fk78BN8cxDuLwNAoVohZn1bcvDA8Nyr52FtB3rlgALg7-xlPGxgZGbCoc7G1DRfQPaNIbbbS9N2FoPNf5fWOr6okjZT7c8tgIWHVWl8boRVmwxxoBOlhZLD65NF0q9km030gZZ9vsUk7k5ecxBBwtrQzUui7GonVJ0gehZMM_g',
   );
 
   TextEditingController brandName = TextEditingController();
@@ -25,12 +26,81 @@ class _InputParameterPageState extends State<InputParameterPage> {
   );
   TextEditingController brandSecureLabel = TextEditingController();
 
+  TextEditingController backendUrl = TextEditingController();
+
+  TextEditingController tenant = TextEditingController();
+
+  TextEditingController origin = TextEditingController();
+
   bool skipIntro = false;
   bool skipPrepare = false;
 
   Color? primaryColor;
   Color? secondaryColor;
   Color? headingColor;
+
+  TextEditingController localization = TextEditingController(
+    text: """{
+    "intro": {
+      "eyebrow": "Identity check",
+      "title": "Let's confirm it's really you",
+      "body": "A quick face scan helps protect your account.",
+      "cta": "Start face scan",
+      "trustLabel": "Bank-grade liveness detection"
+    },
+    "prepare": {
+      "eyebrow": "Before we start",
+      "title": "Three things for a clean scan",
+      "tips": [
+        {
+          "title": "Find good light",
+          "body": "Avoid strong backlight."
+        },
+        {
+          "title": "Clear your face",
+          "body": "Remove sunglasses or masks."
+        },
+        {
+          "title": "Hold steady",
+          "body": "Keep the device at eye level."
+        }
+      ],
+      "cta": "I'm ready",
+      "backLabel": "Back"
+    },
+    "starting": {
+      "title": "Starting camera",
+      "body": "Creating a secure liveness session."
+    },
+    "processing": {
+      "title": "Verifying your scan",
+      "body": "This usually takes just a moment."
+    },
+    "success": {
+      "title": "You're verified",
+      "body": "Thanks. The liveness check was completed.",
+      "cta": "Thanks. The liveness check was completed."
+    },
+    "fail": {
+      "title": "We couldn't complete the scan",
+      "body": "Move somewhere brighter and try again.",
+      "cta": "Move somewhere brighter and try again."
+    },
+    "cameraPermission": {
+      "title": "Camera access is required",
+      "body": "Allow camera access, then try again."
+    }
+  }""",
+  );
+
+  TextEditingController captureText = TextEditingController(
+    text: '''{
+    "hintCenterFaceText": "Center your face",
+    "hintTooCloseText": "Move back",
+    "hintTooFarText": "Move closer",
+    "hintHoldFaceForFreshnessText": "Hold still"
+  }''',
+  );
 
   String? errorString;
 
@@ -48,17 +118,33 @@ class _InputParameterPageState extends State<InputParameterPage> {
         },
         body: jsonEncode({
           'external_id': DateTime.now().microsecondsSinceEpoch,
-          'public_link': 'http://localhost:5173/',
+          'public_link': backendUrl.text.isNotEmpty == true
+              ? backendUrl.text
+              : 'http://localhost:5173/',
           'api_domain': 'https://api-dev.accelerationcloud.info',
-          'callback_url': 'http://localhost:5173/',
+          'callback_url': backendUrl.text.isNotEmpty == true
+              ? backendUrl.text
+              : 'http://localhost:5173/',
           'meta': {},
           'branding': {
-            'tenantName': 'Fintech Automation',
-            'logoUrl':
-                'https://accloud-public-storage-dev1.s3.us-east-2.amazonaws.com/REx0xk8bC8_tenants/GBX/Fintech_6_pwo4ga.png',
+            'tenantName': valueOrDefault(
+              brandName.text,
+              defaultValue: 'Fintech Automation',
+            ),
+            'logoUrl': valueOrDefault(
+              brandLogoUrl.text,
+              defaultValue:
+                  'https://accloud-public-storage-dev1.s3.us-east-2.amazonaws.com/REx0xk8bC8_tenants/GBX/Fintech_6_pwo4ga.png',
+            ),
             'bannerUrl':
                 'https://accloud-public-storage-dev1.s3.us-east-2.amazonaws.com/REx0xk8bC8_tenants/GBX/banner.png',
-            'themeColor': '#1d4ed8',
+            'themeColor': primaryColor != null
+                ? colorToHex(
+                    primaryColor!,
+                    includeHashSign: true,
+                    enableAlpha: false,
+                  )
+                : '#1d4ed8',
           },
         }),
       );
@@ -98,11 +184,11 @@ class _InputParameterPageState extends State<InputParameterPage> {
     return null;
   }
 
-  String? valueOrEmpty(String value) {
+  String? valueOrDefault(String value, {String? defaultValue}) {
     if (value.isNotEmpty) {
       return value;
     }
-    return null;
+    return defaultValue;
   }
 
   Future<Color?> selectColors(BuildContext context) async {
@@ -155,16 +241,40 @@ class _InputParameterPageState extends State<InputParameterPage> {
         child: ListView(
           padding: EdgeInsets.all(12),
           children: [
-            if (errorString?.isNotEmpty == true)
-              Text(
-                'Error: $errorString',
-                style: TextStyle(color: Colors.red, fontSize: 20),
-              ),
             TextFormField(
               controller: token,
               maxLines: 5,
               minLines: 1,
               decoration: InputDecoration(label: Text('Token')),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Parameters',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            TextFormField(
+              controller: backendUrl,
+              decoration: InputDecoration(label: Text('Backend Url')),
+            ),
+            TextFormField(
+              controller: tenant,
+              decoration: InputDecoration(label: Text('Tenant')),
+            ),
+            TextFormField(
+              controller: origin,
+              decoration: InputDecoration(label: Text('Origin')),
+            ),
+            TextFormField(
+              controller: localization,
+              minLines: 10,
+              maxLines: 1000,
+              decoration: InputDecoration(label: Text('Localization')),
+            ),
+            TextFormField(
+              controller: captureText,
+              minLines: 1,
+              maxLines: 1000,
+              decoration: InputDecoration(label: Text('Capture Text')),
             ),
             SizedBox(height: 16),
             Text(
@@ -246,6 +356,11 @@ class _InputParameterPageState extends State<InputParameterPage> {
                 );
               },
             ),
+            if (errorString?.isNotEmpty == true)
+              Text(
+                'Error: $errorString',
+                style: TextStyle(color: Colors.red, fontSize: 20),
+              ),
             ElevatedButton(
               onPressed: loading
                   ? null
@@ -259,15 +374,23 @@ class _InputParameterPageState extends State<InputParameterPage> {
                         loading = false;
                       });
                       if (launchToken?.isNotEmpty == true) {
+                        Map<String, String> captureTextMap =
+                            Map<String, String>.from(
+                              jsonDecode(captureText.text),
+                            );
+
                         Navigator.push(
                           // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
                             builder: (context) => FaceLivenessPage(
+                              backendUrl: valueOrDefault(backendUrl.text),
+                              tenant: valueOrDefault(tenant.text),
+                              origin: valueOrDefault(origin.text),
                               launchToken: launchToken!,
-                              brandName: valueOrEmpty(brandName.text),
-                              brandLogoUrl: valueOrEmpty(brandLogoUrl.text),
-                              brandSecureLabel: valueOrEmpty(
+                              brandName: valueOrDefault(brandName.text),
+                              brandLogoUrl: valueOrDefault(brandLogoUrl.text),
+                              brandSecureLabel: valueOrDefault(
                                 brandSecureLabel.text,
                               ),
                               skipIntro: skipIntro,
@@ -293,6 +416,10 @@ class _InputParameterPageState extends State<InputParameterPage> {
                                       enableAlpha: false,
                                     )
                                   : null,
+                              localization: LivenessLocalization.fromJson(
+                                jsonDecode(localization.text),
+                              ),
+                              captureText: captureTextMap,
                             ),
                           ),
                         );

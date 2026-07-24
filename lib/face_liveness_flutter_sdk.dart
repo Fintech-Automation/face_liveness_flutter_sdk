@@ -124,7 +124,7 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
         UserScript(
           source:
               """
-                window.__INITIAL_NATIVE_DATA__ = '${jsonEncode(parameter)}';
+                window.__INITIAL_NATIVE_DATA__ = `${jsonEncode(parameter)}`;
               """,
           injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
         ),

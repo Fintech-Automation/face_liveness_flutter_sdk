@@ -1,19 +1,19 @@
 class LivenessLocalization {
-  final LivenessLocalizationIntro? intro;
+  LivenessLocalizationIntro? intro;
 
-  final LivenessLocalizationPrepare? prepare;
+  LivenessLocalizationPrepare? prepare;
 
-  final LivenessLocalizationPageElements? starting;
+  LivenessLocalizationPageElements? starting;
 
-  final LivenessLocalizationPageElements? processing;
+  LivenessLocalizationPageElements? processing;
 
-  final LivenessLocalizationResultElements? success;
+  LivenessLocalizationResultElements? success;
 
-  final LivenessLocalizationResultElements? fail;
+  LivenessLocalizationResultElements? fail;
 
-  final LivenessLocalizationPageElements? cameraPermission;
+  LivenessLocalizationPageElements? cameraPermission;
 
-  const LivenessLocalization({
+  LivenessLocalization({
     this.intro,
     this.prepare,
     this.starting,
@@ -22,6 +22,34 @@ class LivenessLocalization {
     this.fail,
     this.cameraPermission,
   });
+
+  LivenessLocalization.fromJson(Map<String, dynamic> json) {
+    if (json['intro'] is Map) {
+      intro = LivenessLocalizationIntro.fromJson(json['intro']);
+    }
+    if (json['prepare'] is Map) {
+      prepare = LivenessLocalizationPrepare.fromJson(json['prepare']);
+    }
+    if (json['starting'] is Map) {
+      starting = LivenessLocalizationPageElements.fromJson(json['starting']);
+    }
+    if (json['processing'] is Map) {
+      processing = LivenessLocalizationPageElements.fromJson(
+        json['processing'],
+      );
+    }
+    if (json['success'] is Map) {
+      success = LivenessLocalizationResultElements.fromJson(json['success']);
+    }
+    if (json['fail'] is Map) {
+      fail = LivenessLocalizationResultElements.fromJson(json['fail']);
+    }
+    if (json['cameraPermission'] is Map) {
+      cameraPermission = LivenessLocalizationPageElements.fromJson(
+        json['cameraPermission'],
+      );
+    }
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -37,21 +65,29 @@ class LivenessLocalization {
 }
 
 class LivenessLocalizationIntro {
-  final String? eyebrow;
-  final String? title;
-  final String? body;
-  final String? cta;
+  String? eyebrow;
+  String? title;
+  String? body;
+  String? cta;
 
   /// Small trust line under the intro CTA; pass `''` to hide.
-  final String? trustLabel;
+  String? trustLabel;
 
-  const LivenessLocalizationIntro({
+  LivenessLocalizationIntro({
     this.eyebrow,
     this.title,
     this.body,
     this.cta,
     this.trustLabel,
   });
+
+  LivenessLocalizationIntro.fromJson(Map<String, dynamic> json) {
+    eyebrow = json['eyebrow'];
+    title = json['title'];
+    body = json['body'];
+    cta = json['cta'];
+    trustLabel = json['trustLabel'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -66,9 +102,14 @@ class LivenessLocalizationIntro {
 }
 
 class LivenessLocalizationPageElements {
-  final String? title;
-  final String? body;
-  const LivenessLocalizationPageElements({this.title, this.body});
+  String? title;
+  String? body;
+  LivenessLocalizationPageElements({this.title, this.body});
+
+  LivenessLocalizationPageElements.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    body = json['body'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -79,19 +120,36 @@ class LivenessLocalizationPageElements {
 }
 
 class LivenessLocalizationPrepare {
-  final String? eyebrow;
-  final String? title;
-  final List<LivenessLocalizationPageElements>? tips;
-  final String? cta;
-  final String? backLabel;
+  String? eyebrow;
+  String? title;
+  List<LivenessLocalizationPageElements>? tips;
+  String? cta;
+  String? backLabel;
 
-  const LivenessLocalizationPrepare({
+  LivenessLocalizationPrepare({
     this.eyebrow,
     this.title,
     this.tips,
     this.cta,
     this.backLabel,
   });
+
+  LivenessLocalizationPrepare.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    eyebrow = json['eyebrow'];
+    if (json['tips'] is List) {
+      tips = (json['tips'] as List)
+          .where((e) => e.values.every((v) => v != null))
+          .map(
+            (e) => LivenessLocalizationPageElements.fromJson(
+              (e as Map<String, dynamic>),
+            ),
+          )
+          .toList();
+    }
+    cta = json['cta'];
+    backLabel = json['backLabel'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -107,9 +165,16 @@ class LivenessLocalizationPrepare {
 
 class LivenessLocalizationResultElements
     extends LivenessLocalizationPageElements {
-  final String? cta;
+  String? cta;
 
-  const LivenessLocalizationResultElements({super.title, super.body, this.cta});
+  LivenessLocalizationResultElements({super.title, super.body, this.cta});
+
+  @override
+  LivenessLocalizationResultElements.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    body = json['body'];
+    cta = json['body'];
+  }
 
   @override
   Map<String, dynamic> toJson() {
