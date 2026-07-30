@@ -16,7 +16,7 @@ class InputParameterPage extends StatefulWidget {
 class _InputParameterPageState extends State<InputParameterPage> {
   TextEditingController token = TextEditingController(
     text:
-        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULnM1WGc5OWc4VFNXWWFXVWNlYTFOY2thOU5ZOTRqcUQyU3N4TS1FU1Z1dzAiLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NDg4Mzg4NSwiZXhwIjoxNzg0ODkxMDg1LCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODQ4ODM4NzgsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.lYEJGYdwHwpYHLRAk4v5TcngTriokBU5UB4nw4RB8i7vuSei2Jy5whPZcg6K4agQxsG0q6_OcHxEp0tnAR8s3t82Gk1QELYdIf12RpqqDrUpn6bl-y2bCEbKbdXL5IMNUcT3mg-YeBWFMhYtoRsH3vFldVLzuHLjgt1mOfIYXmI8Fk78BN8cxDuLwNAoVohZn1bcvDA8Nyr52FtB3rlgALg7-xlPGxgZGbCoc7G1DRfQPaNIbbbS9N2FoPNf5fWOr6okjZT7c8tgIWHVWl8boRVmwxxoBOlhZLD65NF0q9km030gZZ9vsUk7k5ecxBBwtrQzUui7GonVJ0gehZMM_g',
+        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULk9MNGNIR3huMlFXbDRWOG1BQ3hOZG1xZ1ZIdzdYMUc3RV9FUHVFVkNPODAiLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NTQxODQ1MywiZXhwIjoxNzg1NDI1NjUzLCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODU0MTg0NDMsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.EssQ5n-ky8IeqSvaQ-Bl-ufxwIgAtIEiL_e0SmqeF0HoTQxAf1tfTQu1OOJBAcMPVrFKVsmubaZzt9mAnzMjjxDaejRoQ1aV4PtZ9n9XBt5wrAHC4GInGOedpScCn_-JvsuJVTFz2mpOkcox1okHO3b4hd3JRjvrgUMMKHPUYrtb7U903bDDCCIV9tYUa_UaRQ8bS2VAR7ty_dMTGwKYWHwUZnsn1AM2ne3nGg-Zn0iiXSv6eoN1SEqiONdunklAgg7bJAYFuL1Gj-Ag4D0wiUYEc3syIAOzeXVhz6_72xV9vjLjZv033ffrAB-6x8Ftz4i2Sg3jhLg5xOrvKXzMRw',
   );
 
   TextEditingController brandName = TextEditingController();
@@ -26,11 +26,11 @@ class _InputParameterPageState extends State<InputParameterPage> {
   );
   TextEditingController brandSecureLabel = TextEditingController();
 
-  TextEditingController backendUrl = TextEditingController();
+  TextEditingController backendUrl = TextEditingController(
+    text: 'https://api-dev.accelerationcloud.info',
+  );
 
-  TextEditingController tenant = TextEditingController();
-
-  TextEditingController origin = TextEditingController();
+  TextEditingController tenant = TextEditingController(text: 'unifi');
 
   bool skipIntro = false;
   bool skipPrepare = false;
@@ -110,7 +110,7 @@ class _InputParameterPageState extends State<InputParameterPage> {
     try {
       http.Response data = await client.post(
         Uri.parse(
-          'https://api-dev.accelerationcloud.info/api/v1/cores/unifi/face-liveness/public-link',
+          '${backendUrl.text}/api/v1/cores/${tenant.text}/facial-liveness',
         ),
         headers: {
           'Content-Type': 'application/json',
@@ -118,15 +118,7 @@ class _InputParameterPageState extends State<InputParameterPage> {
         },
         body: jsonEncode({
           'external_id': DateTime.now().microsecondsSinceEpoch,
-          'public_link': backendUrl.text.isNotEmpty == true
-              ? backendUrl.text
-              : 'http://localhost:5173/',
-          'api_domain': 'https://api-dev.accelerationcloud.info',
-          'callback_url': backendUrl.text.isNotEmpty == true
-              ? backendUrl.text
-              : 'http://localhost:5173/',
-          'meta': {},
-          'branding': {
+          'brandingConfig': {
             'tenantName': valueOrDefault(
               brandName.text,
               defaultValue: 'Fintech Automation',
@@ -153,15 +145,8 @@ class _InputParameterPageState extends State<InputParameterPage> {
         Map<String, dynamic> responseData = jsonDecode(data.body);
         print('Liveness link response Data : ${responseData}');
         if (responseData['code'] == 200) {
-          String link = responseData['data'];
-          print('Liveness link created successfully: $link');
-          if (link.isNotEmpty) {
-            String token = Uri.parse(link).queryParameters['token'].toString();
-            print('Liveness token created successfully: $token');
-            return token;
-          } else {
-            print('Failed to create liveness link: Link is empty');
-          }
+          String token = responseData['data'];
+          return token;
         } else {
           setState(() {
             errorString = responseData['error_message'];
@@ -259,10 +244,6 @@ class _InputParameterPageState extends State<InputParameterPage> {
             TextFormField(
               controller: tenant,
               decoration: InputDecoration(label: Text('Tenant')),
-            ),
-            TextFormField(
-              controller: origin,
-              decoration: InputDecoration(label: Text('Origin')),
             ),
             TextFormField(
               controller: localization,
@@ -384,9 +365,8 @@ class _InputParameterPageState extends State<InputParameterPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => FaceLivenessPage(
-                              backendUrl: valueOrDefault(backendUrl.text),
-                              tenant: valueOrDefault(tenant.text),
-                              origin: valueOrDefault(origin.text),
+                              backendUrl: backendUrl.text,
+                              tenant: tenant.text,
                               launchToken: launchToken!,
                               brandName: valueOrDefault(brandName.text),
                               brandLogoUrl: valueOrDefault(brandLogoUrl.text),

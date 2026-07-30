@@ -1,5 +1,4 @@
 import 'package:face_liveness_flutter_sdk/face_liveness_flutter_sdk.dart';
-import 'package:face_liveness_flutter_sdk/models/face_liveness_env.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_brand.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_flow.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_localization.dart';
@@ -9,9 +8,8 @@ import 'package:flutter/material.dart';
 class FaceLivenessPage extends StatefulWidget {
   const FaceLivenessPage({
     required this.launchToken,
-    this.backendUrl,
-    this.tenant,
-    this.origin,
+    required this.backendUrl,
+    required this.tenant,
     this.brandName,
     this.brandLogoUrl,
     this.brandSecureLabel,
@@ -25,9 +23,8 @@ class FaceLivenessPage extends StatefulWidget {
     super.key,
   });
 
-  final String? backendUrl;
-  final String? tenant;
-  final String? origin;
+  final String backendUrl;
+  final String tenant;
 
   final String launchToken;
   final String? brandName;
@@ -55,7 +52,6 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Face Liveness')),
       body: FaceLivenessWidget(
-        env: FaceLivenessEnv.dev,
         launchToken: widget.launchToken,
         brand: LivenessBrand(
           name: widget.brandName,
@@ -66,7 +62,6 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
         ),
         backendUrl: widget.backendUrl,
         tenant: widget.tenant,
-        origin: widget.origin,
         flow: LivenessFlow(
           skipIntro: widget.skipIntro,
           skipPrepare: widget.skipPrepare,

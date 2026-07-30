@@ -14,12 +14,12 @@ import 'package:face_liveness_flutter_sdk/models/liveness_result_model.dart';
 
 class FaceLivenessWidget extends StatefulWidget {
   const FaceLivenessWidget({
-    this.env,
-    this.launchToken,
+    // this.env,
+    required this.launchToken,
     this.brand,
-    this.backendUrl,
-    this.origin,
-    this.tenant,
+    required this.backendUrl,
+    // this.origin,
+    required this.tenant,
     this.flow,
     this.theme,
     this.localization,
@@ -35,22 +35,22 @@ class FaceLivenessWidget extends StatefulWidget {
   });
 
   /// Selects the FTA backend URL + bundled Cognito config. Default 'prod'.
-  final FaceLivenessEnv? env;
+  // final FaceLivenessEnv? env;
 
   /// Preferred short-lived bearer token for backend session APIs.
-  final String? launchToken;
+  final String launchToken;
 
   /// Brand shown in the SDK chrome.
   final LivenessBrand? brand;
 
   /// Override the environment's default FTA backend URL.
-  final String? backendUrl;
+  final String backendUrl;
 
   /// Optional origin/domain sent to the backend.
-  final String? origin;
+  // final String? origin;
 
   /// Backend tenant namespace. Defaults to `'unifi'`.
-  final String? tenant;
+  final String tenant;
 
   /// Flow behavior, independent from visual theme.
   final LivenessFlow? flow;
@@ -92,11 +92,11 @@ class FaceLivenessWidget extends StatefulWidget {
 class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
   Map<String, dynamic> get parameter {
     return {
-      'env': widget.env?.name,
+      // 'env': widget.env?.name,
       'launchToken': widget.launchToken,
       'brand': widget.brand?.toJson(),
       'backendUrl': widget.backendUrl,
-      'origin': widget.origin,
+      // 'origin': widget.origin,
       'tenant': widget.tenant,
       'flow': widget.flow,
       'theme': widget.theme?.toJson(),
@@ -208,13 +208,12 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
         print('Console message: ${consoleMessage.message}');
       },
       onReceivedError: (controller, request, message) {
-        print('加载失败: $message');
+        print('error: $message');
       },
       onReceivedHttpError: (controller, request, errorResponse) {
-        print('HTTP错误: ${errorResponse.statusCode} ${errorResponse.data}');
+        print('HTTP error: ${errorResponse.statusCode} ${errorResponse.data}');
       },
       onReceivedServerTrustAuthRequest: (controller, challenge) async {
-        // 直接放行，接受所有服务器的证书
         return ServerTrustAuthResponse(
           action: ServerTrustAuthResponseAction.PROCEED,
         );
