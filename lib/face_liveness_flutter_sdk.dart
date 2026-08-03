@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'package:face_liveness_flutter_sdk/models/face_liveness_env.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_brand.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_error_model.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_flow.dart';
