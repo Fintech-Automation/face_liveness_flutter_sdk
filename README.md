@@ -89,7 +89,7 @@ correctly without valid values for them.
 | `onError`    | `void Function(LivenessErrorModel?)`      | No       | none           | Called when a session, camera, capture, or result-fetch error occurs. |
 | `onCancel`    | `void Function()`      | No       | none           | Called when the user cancels the live capture flow. |
 | `onAnalysisComplete`    | `void Function()`      | No       | none           | Called when the capture detector finishes analysis and the SDK begins fetching backend results. |
-| `onScreenChange`    | `void Function(LivenessScreenType)`      | No       | none           | Called when the flow changes screens. |
+| `onScreenChange`    | `void Function(LivenessScreenType?)`      | No       | none           | Called when the flow changes screens. |
 | `onContinue`    | `void Function()`      | No       | none           | Called when the user taps Continue on the success screen. |
 
 
