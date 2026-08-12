@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 
 class FaceLivenessPage extends StatefulWidget {
   const FaceLivenessPage({
-    required this.launchToken,
-    required this.backendUrl,
-    required this.tenant,
+    required this.verificationToken,
     this.brandName,
     this.brandLogoUrl,
     this.brandSecureLabel,
@@ -23,10 +21,7 @@ class FaceLivenessPage extends StatefulWidget {
     super.key,
   });
 
-  final String backendUrl;
-  final String tenant;
-
-  final String launchToken;
+  final String verificationToken;
   final String? brandName;
   final String? brandLogoUrl;
   final String? brandSecureLabel;
@@ -52,7 +47,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Face Liveness')),
       body: FaceLivenessWidget(
-        launchToken: widget.launchToken,
+        verificationToken: widget.verificationToken,
         brand: LivenessBrand(
           name: widget.brandName,
           logoUrl: widget.brandLogoUrl?.isNotEmpty == true
@@ -60,8 +55,6 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
               : null,
           secureLabel: widget.brandSecureLabel,
         ),
-        backendUrl: widget.backendUrl,
-        tenant: widget.tenant,
         flow: LivenessFlow(
           skipIntro: widget.skipIntro,
           skipPrepare: widget.skipPrepare,

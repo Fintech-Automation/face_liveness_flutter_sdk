@@ -13,12 +13,8 @@ import 'package:face_liveness_flutter_sdk/models/liveness_result_model.dart';
 
 class FaceLivenessWidget extends StatefulWidget {
   const FaceLivenessWidget({
-    // this.env,
-    required this.launchToken,
+    required this.verificationToken,
     this.brand,
-    required this.backendUrl,
-    // this.origin,
-    required this.tenant,
     this.flow,
     this.theme,
     this.localization,
@@ -33,23 +29,11 @@ class FaceLivenessWidget extends StatefulWidget {
     super.key,
   });
 
-  /// Selects the FTA backend URL + bundled Cognito config. Default 'prod'.
-  // final FaceLivenessEnv? env;
-
-  /// Preferred short-lived bearer token for backend session APIs.
-  final String launchToken;
+  /// Bearer token used to authenticate backend APIs.
+  final String verificationToken;
 
   /// Brand shown in the SDK chrome.
   final LivenessBrand? brand;
-
-  /// Override the environment's default FTA backend URL.
-  final String backendUrl;
-
-  /// Optional origin/domain sent to the backend.
-  // final String? origin;
-
-  /// Backend tenant namespace. Defaults to `'unifi'`.
-  final String tenant;
 
   /// Flow behavior, independent from visual theme.
   final LivenessFlow? flow;
@@ -91,12 +75,8 @@ class FaceLivenessWidget extends StatefulWidget {
 class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
   Map<String, dynamic> get parameter {
     return {
-      // 'env': widget.env?.name,
-      'launchToken': widget.launchToken,
+      'verificationToken': widget.verificationToken,
       'brand': widget.brand?.toJson(),
-      'backendUrl': widget.backendUrl,
-      // 'origin': widget.origin,
-      'tenant': widget.tenant,
       'flow': widget.flow,
       'theme': widget.theme?.toJson(),
       'localization': widget.localization?.toJson(),
@@ -107,9 +87,9 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      // initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
-      initialFile:
-          'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
+      initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
+      // initialFile:
+      // 'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
       initialSettings: InAppWebViewSettings(
         mediaPlaybackRequiresUserGesture: false,
         allowsInlineMediaPlayback: true,

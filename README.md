@@ -6,7 +6,7 @@ face liveness capture engine. It provides:
 - FTA backend session creation and result lookup.
 - Built-in runtime configuration.
 - Branded wrapper screens before and after the camera capture step.
-- Grouped `brand`, `theme`, `localization`, `captureText`, and `callbacks`
+- Grouped `brand`, `theme`, `localization`, and `callbacks`
   options for readable host integration.
 
 The flow is:
@@ -28,19 +28,9 @@ face_liveness_flutter_sdk:
 
 ```dart
 import 'package:face_liveness_flutter_sdk/face_liveness_flutter_sdk.dart';
-import 'package:face_liveness_flutter_sdk/models/liveness_brand.dart';
 
 FaceLivenessWidget(
-    launchToken: 'YOUR_LAUNCH_TOKEN',
-    brand: LivenessBrand(
-        name: widget.brandName,
-        logoUrl: widget.brandLogoUrl?.isNotEmpty == true
-            ? Uri.parse(widget.brandLogoUrl!)
-            : null,
-        secureLabel: widget.brandSecureLabel,
-    ),
-    backendUrl: 'YOUR_BACKEND_URL',
-    tenant: 'YOUR_TENANT',
+    verificationToken: 'YOUR_TOKEN',
     onSuccess: (result) => print('Liveness check succeeded: ${result?.toJson()}'),
     onFail: (result) => ('Liveness check failed: ${result?.toJson()}'),
     onCancel: () => print('Liveness check canceled'),
@@ -53,8 +43,8 @@ FaceLivenessWidget(
 
 ## Authentication Token
 
-Obtain a `launchToken` before rendering the component, then pass it through
-the `launchToken` prop. For the API request and response details, refer to the
+Obtain a `verificationToken` before rendering the component, then pass it through
+the `verificationToken` prop. For the API request and response details, refer to the
 [UniFi Face Liveness API documentation](https://api-docs.accelerationcloud.com/resource/unifi-face-liveness).
 
 
@@ -70,20 +60,16 @@ correctly without valid values for them.
 
 | Parameter | Purpose |
 | --- | --- |
-| `launchToken` | Bearer token used to authenticate backend requests. |
-| `backendUrl` | Face Liveness backend URL for the selected deployment. |
-| `tenant` | Tenant namespace used to build the backend API path. |
+| `verificationToken` | Bearer token used to authenticate backend requests. |
+
 
 | Prop           | Type                     | Required | Default        | Description                                     |
 | -------------- | ------------------------ | -------- | -------------- | ----------------------------------------------- |
-| `launchToken`  | `String`                 | Yes      | none           | Bearer token used to authenticate backend APIs. |
-| `backendUrl`   | `String`                 | Yes      | production URL | Face Liveness backend URL.                      |
-| `tenant`       | `String`                 | Yes      | `'unifi'`      | Tenant namespace used in the backend API path.  |
+| `verificationToken`  | `String`                 | Yes      | none           | Bearer token used to authenticate backend APIs. |
 | `flow`         | `LivenessFlow`           | No       | SDK defaults   | Flow behavior.                                  |
 | `brand`        | `LivenessBrand`          | No       | SDK defaults   | Brand shown in the SDK header.                  |
 | `theme`        | `LivenessTheme`          | No       | SDK defaults   | Visual system tokens.                           |
 | `localization` | `LivenessLocalization`   | No       | SDK defaults   | SDK-owned screen copy.                          |
-| `captureText`  | `Map<String, String>` | No       | SDK defaults   | Text overrides for the camera/capture step.     |
 | `onSuccess`    | `void Function(LivenessResultModel?)`      | No       | none           | Called after the backend returns a successful liveness result.|
 | `onFail`    | `void Function(LivenessResultModel?)`      | No       | none           | Called after the backend returns a non-passing or failed result. |
 | `onError`    | `void Function(LivenessErrorModel?)`      | No       | none           | Called when a session, camera, capture, or result-fetch error occurs. |
@@ -283,22 +269,6 @@ class LivenessLocalizationResultElements
 }
 
 ```
-
-## Capture Text
-
-`captureText` customizes the text shown during the camera/capture step.
-
-```dart
-FaceLivenessWidget(
-    captureText: {
-        "hintCenterFaceText": "Center your face",
-        "hintTooCloseText": "Move back",
-        "hintTooFarText": "Move closer",
-        "hintHoldFaceForFreshnessText": "Hold still"
-    },
-)
-```
-
 
 ## Notes
 

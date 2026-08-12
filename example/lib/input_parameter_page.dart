@@ -16,7 +16,7 @@ class InputParameterPage extends StatefulWidget {
 class _InputParameterPageState extends State<InputParameterPage> {
   TextEditingController token = TextEditingController(
     text:
-        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULk9MNGNIR3huMlFXbDRWOG1BQ3hOZG1xZ1ZIdzdYMUc3RV9FUHVFVkNPODAiLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NTQxODQ1MywiZXhwIjoxNzg1NDI1NjUzLCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODU0MTg0NDMsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.EssQ5n-ky8IeqSvaQ-Bl-ufxwIgAtIEiL_e0SmqeF0HoTQxAf1tfTQu1OOJBAcMPVrFKVsmubaZzt9mAnzMjjxDaejRoQ1aV4PtZ9n9XBt5wrAHC4GInGOedpScCn_-JvsuJVTFz2mpOkcox1okHO3b4hd3JRjvrgUMMKHPUYrtb7U903bDDCCIV9tYUa_UaRQ8bS2VAR7ty_dMTGwKYWHwUZnsn1AM2ne3nGg-Zn0iiXSv6eoN1SEqiONdunklAgg7bJAYFuL1Gj-Ag4D0wiUYEc3syIAOzeXVhz6_72xV9vjLjZv033ffrAB-6x8Ftz4i2Sg3jhLg5xOrvKXzMRw',
+        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjZ0cTdUTWRXc0o3NTFWT0RsY3QzR0dJNk43SW9iYWV0Rm9FNXF2Q1Jkb2siLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NjUyMjM5NiwiZXhwIjoxNzg2NTI5NTk2LCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODY1MjIzOTAsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.lZJHX0N6eJkzOb_x88nuvTmOLZ0z9CG5Mq4ZrWdyWxe-afXmNWqXlbAAw1MIMx_kQPH6iW36bq5yPSEReMeh79iGvVuZzv6sQ7VYsRXslC_ioL2JV7eR93Lp01DPdaIlUq2qNfwq06QDGNyPAAtTRGe-3oV4p2vfdLhXCH1sv5mtHjBBy6n5kn6vndZZb47CAbCk5z-_2CDusXrPWL2jabeJi5zK7ie0kOCu1styGhKQcKPFEdgpahI0Z7C0j6bX5DsV6T0ZBLP0WBzDKTp_xsB3bA5qL9mb05e4yV7bvXa4fm-fydatGJLZKz09_mJDBQNsRR3hoUfzhLDviCPtTQ',
   );
 
   TextEditingController brandName = TextEditingController();
@@ -144,8 +144,8 @@ class _InputParameterPageState extends State<InputParameterPage> {
       if (data.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(data.body);
         print('Liveness link response Data : ${responseData}');
-        if (responseData['code'] == 200) {
-          String token = responseData['data'];
+        if (responseData['code'] == 200 && responseData['data'] is Map) {
+          String token = responseData['data']['session_token'];
           return token;
         } else {
           setState(() {
@@ -350,11 +350,11 @@ class _InputParameterPageState extends State<InputParameterPage> {
                       setState(() {
                         loading = true;
                       });
-                      String? launchToken = await createLivenessLink();
+                      String? verificationToken = await createLivenessLink();
                       setState(() {
                         loading = false;
                       });
-                      if (launchToken?.isNotEmpty == true) {
+                      if (verificationToken?.isNotEmpty == true) {
                         Map<String, String> captureTextMap =
                             Map<String, String>.from(
                               jsonDecode(captureText.text),
@@ -365,9 +365,7 @@ class _InputParameterPageState extends State<InputParameterPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => FaceLivenessPage(
-                              backendUrl: backendUrl.text,
-                              tenant: tenant.text,
-                              launchToken: launchToken!,
+                              verificationToken: verificationToken!,
                               brandName: valueOrDefault(brandName.text),
                               brandLogoUrl: valueOrDefault(brandLogoUrl.text),
                               brandSecureLabel: valueOrDefault(
