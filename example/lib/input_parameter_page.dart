@@ -16,7 +16,7 @@ class InputParameterPage extends StatefulWidget {
 class _InputParameterPageState extends State<InputParameterPage> {
   TextEditingController token = TextEditingController(
     text:
-        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjZ0cTdUTWRXc0o3NTFWT0RsY3QzR0dJNk43SW9iYWV0Rm9FNXF2Q1Jkb2siLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NjUyMjM5NiwiZXhwIjoxNzg2NTI5NTk2LCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODY1MjIzOTAsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.lZJHX0N6eJkzOb_x88nuvTmOLZ0z9CG5Mq4ZrWdyWxe-afXmNWqXlbAAw1MIMx_kQPH6iW36bq5yPSEReMeh79iGvVuZzv6sQ7VYsRXslC_ioL2JV7eR93Lp01DPdaIlUq2qNfwq06QDGNyPAAtTRGe-3oV4p2vfdLhXCH1sv5mtHjBBy6n5kn6vndZZb47CAbCk5z-_2CDusXrPWL2jabeJi5zK7ie0kOCu1styGhKQcKPFEdgpahI0Z7C0j6bX5DsV6T0ZBLP0WBzDKTp_xsB3bA5qL9mb05e4yV7bvXa4fm-fydatGJLZKz09_mJDBQNsRR3hoUfzhLDviCPtTQ',
+        'Bearer eyJraWQiOiJqXzJIZDZWRnhQbjFVT0NqZG9mNlVYR1dCbXcyWWlicEEteGJ1cDE4UHBNIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULkNlVEtpbU9uc05UVFBGMUlSNDduczNzdEMyZGV4WTdhNFJhR3o0RnhObEkiLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNlNnY2MmljQ0R0aTRZcTFkNyIsImF1ZCI6ImFwaTovL3RlbmFudCIsImlhdCI6MTc4NjU0MDkyMCwiZXhwIjoxNzg2NTQ4MTIwLCJjaWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyIsInVpZCI6IjAwdWU3NXoxdjB0bWI0RWlOMWQ3Iiwic2NwIjpbIm9wZW5pZCJdLCJhdXRoX3RpbWUiOjE3ODY1NDA5MTgsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiY2xpZW50SWQiOiIwb2FoZTU3dmNla0FrSGk5UDFkNyJ9.Dq4HHFUxMwGPvm1JXHGo9MosBWqxwuyDDsO1sXr_mZwXXQPta4oN7MGCkhi4B12UEZQg9TVVT6Odt2KF3MofdP4pogMGJRyqwQiCeaJC3E6tl9L0pNmxBCTRcchTaS1Sjz4HNWTQk3E3zH-UPBStZZDp2gxMRwVlb3hpJoB_gpeMcUDdw360HXAB5pB1Zqkyc4oDOsjIqjM_zEdXkcPqW7C3EzK_-nictHAywP5Bo1bxgrL0EY9aHy8QLfNLm8RO6xpJMwQ_r4pmtUv0Q_eoA8Mu_38HajF1oAfWry8L2KOxsUh2IboV64sqsO1ASxA8YG7BuYbz1crQERLtZ3FACQ',
   );
 
   TextEditingController brandName = TextEditingController();
@@ -93,14 +93,14 @@ class _InputParameterPageState extends State<InputParameterPage> {
   }""",
   );
 
-  TextEditingController captureText = TextEditingController(
-    text: '''{
-    "hintCenterFaceText": "Center your face",
-    "hintTooCloseText": "Move back",
-    "hintTooFarText": "Move closer",
-    "hintHoldFaceForFreshnessText": "Hold still"
-  }''',
-  );
+  // TextEditingController captureText = TextEditingController(
+  //   text: '''{
+  //   "hintCenterFaceText": "Center your face",
+  //   "hintTooCloseText": "Move back",
+  //   "hintTooFarText": "Move closer",
+  //   "hintHoldFaceForFreshnessText": "Hold still"
+  // }''',
+  // );
 
   String? errorString;
 
@@ -251,12 +251,12 @@ class _InputParameterPageState extends State<InputParameterPage> {
               maxLines: 1000,
               decoration: InputDecoration(label: Text('Localization')),
             ),
-            TextFormField(
-              controller: captureText,
-              minLines: 1,
-              maxLines: 1000,
-              decoration: InputDecoration(label: Text('Capture Text')),
-            ),
+            // TextFormField(
+            //   controller: captureText,
+            //   minLines: 1,
+            //   maxLines: 1000,
+            //   decoration: InputDecoration(label: Text('Capture Text')),
+            // ),
             SizedBox(height: 16),
             Text(
               'Brand',
@@ -355,10 +355,10 @@ class _InputParameterPageState extends State<InputParameterPage> {
                         loading = false;
                       });
                       if (verificationToken?.isNotEmpty == true) {
-                        Map<String, String> captureTextMap =
-                            Map<String, String>.from(
-                              jsonDecode(captureText.text),
-                            );
+                        // Map<String, String> captureTextMap =
+                        //     Map<String, String>.from(
+                        //       jsonDecode(captureText.text),
+                        //     );
 
                         Navigator.push(
                           // ignore: use_build_context_synchronously
@@ -397,7 +397,7 @@ class _InputParameterPageState extends State<InputParameterPage> {
                               localization: LivenessLocalization.fromJson(
                                 jsonDecode(localization.text),
                               ),
-                              captureText: captureTextMap,
+                              // captureText: captureTextMap,
                             ),
                           ),
                         );

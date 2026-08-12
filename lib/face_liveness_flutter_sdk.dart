@@ -87,9 +87,9 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
-      // initialFile:
-      // 'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
+      // initialUrlRequest: URLRequest(url: WebUri('https://192.168.31.17:5173/')),
+      initialFile:
+          'packages/face_liveness_flutter_sdk/assets/html/face_liveness.html',
       initialSettings: InAppWebViewSettings(
         mediaPlaybackRequiresUserGesture: false,
         allowsInlineMediaPlayback: true,
