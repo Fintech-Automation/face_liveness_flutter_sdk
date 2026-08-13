@@ -169,11 +169,10 @@ class LivenessLocalizationResultElements
 
   LivenessLocalizationResultElements({super.title, super.body, this.cta});
 
-  @override
   LivenessLocalizationResultElements.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     body = json['body'];
-    cta = json['body'];
+    cta = json['cta'];
   }
 
   @override
