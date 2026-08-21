@@ -79,17 +79,13 @@ correctly without valid values for them.
 | `onContinue`    | `void Function()`      | No       | none           | Called when the user taps Continue on the success screen. |
 
 
-Pass `backendUrl` to use the Face Liveness backend for your deployment. The
-supported backend URLs are:
+### SessionStatus values
 
-| Deployment | Backend URL |
-| --- | --- |
-| Development | `https://api-dev.accelerationcloud.info` |
-| Staging | `https://api-staging.accelerationcloud.info` |
-| UAT | `https://api-uat.accelerationcloud.com` |
-| Production | `https://api.accelerationcloud.com` |
-
-When omitted, `backendUrl` defaults to the production URL.
+- `COMPLETED`: The token already completed the liveness check successfully.
+- `EXPIRED`: The token has expired or the backend returned an auth/session-expired response.
+- `INVALID`: The token is invalid, rejected, or otherwise failed validation.
+- `READY`: Session token is valid and ready for liveness detection.
+- `RETRY_LIMIT_EXCEEDED`: Retry limit exceeded — no further attempts allowed.
 
 
 ### Result Class
@@ -269,6 +265,39 @@ class LivenessLocalizationResultElements
 }
 
 ```
+
+### Localization props reference
+
+| Prop path          | Type     | Description                                         |
+| ------------------ | -------- | --------------------------------------------------- |
+| `intro.eyebrow`    | `String` | Small overline text above the intro title.          |
+| `intro.title`      | `String` | Main heading shown on the intro screen.             |
+| `intro.body`       | `String` | Paragraph explaining the check on the intro screen. |
+| `intro.cta`        | `String` | Primary call-to-action on the intro screen.         |
+| `intro.trustLabel` | `String` | Small security/trust label shown in header.         |
+
+| `prepare.eyebrow` | `String` | Overline text for the prepare screen. |
+| `prepare.title` | `String` | Main heading for the prepare screen. |
+| `prepare.tips` | `List<LivenessLocalizationPageElements>` | Array of tip objects displayed as a short checklist. |
+| `prepare.cta` | `String` | Primary action label on the prepare screen. |
+| `prepare.backLabel` | `String` | Back button label on the prepare screen. |
+
+| `starting.title` | `String` | Title shown while the camera is starting. |
+| `starting.body` | `String` | Supporting text while a session is being created. |
+
+| `processing.title` | `String` | Title shown while verification is in progress. |
+| `processing.body` | `String` | Supporting text shown during result fetch. |
+
+| `success.title` | `String` | Title for the success screen. |
+| `success.body` | `String` | Supporting success text. |
+| `success.cta` | `String` | Continue/acknowledge button text on success. |
+
+| `fail.title` | `String` | Title shown when a scan cannot complete. |
+| `fail.body` | `String` | Guidance text shown on failure. |
+| `fail.cta` | `String` | Retry button label on fail screen. |
+
+| `cameraPermission.title` | `String` | Title when camera permission is required. |
+| `cameraPermission.body` | `String` | Instructional text for granting camera permission. |
 
 ## Notes
 
