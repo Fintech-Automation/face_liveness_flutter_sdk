@@ -19,6 +19,8 @@ class _InputParameterPageState extends State<InputParameterPage> {
         'eyJraWQiOiJxRGZiUElwWE4ySDhVUlNmQUZ4OFZUUXg0TkVjdnlSU0s3anpON0NjVmtVIiwidHlwIjoiYXBwbGljYXRpb24vb2t0YS1pbnRlcm5hbC1hdCtqd3QiLCJhbGciOiJSUzI1NiJ9.eyJ2ZXIiOjEsImp0aSI6IkFULktKWjE0OTktajNQVnR4czVvYjVUeFo1YnA5SjJIMXRDMnp3MFdGMktjS1kub2FyMXQ0ZmxtaHpib3lDV2kxZDciLCJpc3MiOiJodHRwczovL2ZpbnRlY2hzc28ub2t0YXByZXZpZXcuY29tIiwiYXVkIjoiaHR0cHM6Ly9maW50ZWNoc3NvLm9rdGFwcmV2aWV3LmNvbSIsInN1YiI6ImJ5YW5AZmludGVjaGF1dG9tYXRpb24uY29tIiwiaWF0IjoxNzg3MzAwMjA4LCJleHAiOjE3ODczMDM4MDgsImNpZCI6IjBvYWhlNTd2Y2VrQWtIaTlQMWQ3IiwidWlkIjoiMDB1ZTc1ejF2MHRtYjRFaU4xZDciLCJzY3AiOlsib2ZmbGluZV9hY2Nlc3MiLCJvcGVuaWQiXSwiYXV0aF90aW1lIjoxNzg3MzAwMjA3fQ.TH6cXhwPxya5sXE9GCvyZkVBdv8SdYTJxuxwM77Cn7TWOqHccKOTForGnE9IUPjjTnljX_w2yuVLvkQsB5nQRBGL51BkB4qVmP8r2-h0xnB8W0HPXymFNIpZymzzPXgIv2CZC30ilrvSYrwdaBUsAyowIOEwb-sTuLhSlA1YEPOJ9BjynMV3PoUxMbeGntEYg1oH02oT2klPTHW0BwGFCwGPXR-r8-huCZeZt6J1tYsc9q1hld684KUAMZXOanCbfXFkY7pk4Rqd3TiLtICqoifvf7iGe9siRNg6HgMgLssWT8wOQ0umo5PSVdiO5XdYV_RdJIBWH0XZjFBoMICwjw',
   );
 
+  TextEditingController verificationToken = TextEditingController();
+
   TextEditingController brandName = TextEditingController();
   TextEditingController brandLogoUrl = TextEditingController(
     text:
@@ -227,10 +229,13 @@ class _InputParameterPageState extends State<InputParameterPage> {
           padding: EdgeInsets.all(12),
           children: [
             TextFormField(
-              controller: token,
+              controller: verificationToken,
+              onChanged: (value) {
+                setState(() {});
+              },
               maxLines: 5,
               minLines: 1,
-              decoration: InputDecoration(label: Text('Token')),
+              decoration: InputDecoration(label: Text('Verification Token')),
             ),
             SizedBox(height: 16),
             Text(
@@ -343,29 +348,23 @@ class _InputParameterPageState extends State<InputParameterPage> {
                 style: TextStyle(color: Colors.red, fontSize: 20),
               ),
             ElevatedButton(
-              onPressed: loading
+              onPressed: verificationToken.text.isEmpty
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus();
-                      setState(() {
-                        loading = true;
-                      });
-                      String? verificationToken = await createLivenessLink();
-                      setState(() {
-                        loading = false;
-                      });
-                      if (verificationToken?.isNotEmpty == true) {
+
+                      if (verificationToken.text.isNotEmpty == true) {
                         // Map<String, String> captureTextMap =
                         //     Map<String, String>.from(
                         //       jsonDecode(captureText.text),
                         //     );
 
-                        Navigator.push(
+                        final result = await Navigator.push(
                           // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
                             builder: (context) => FaceLivenessPage(
-                              verificationToken: verificationToken!,
+                              verificationToken: verificationToken.text,
                               brandName: valueOrDefault(brandName.text),
                               brandLogoUrl: valueOrDefault(brandLogoUrl.text),
                               brandSecureLabel: valueOrDefault(
@@ -401,6 +400,13 @@ class _InputParameterPageState extends State<InputParameterPage> {
                             ),
                           ),
                         );
+                        if (result is String && result.isNotEmpty) {
+                          setState(() {
+                            verificationToken.clear();
+                            errorString =
+                                'The current Verification Token has $result. Please obtain it again.';
+                          });
+                        }
                       }
                     },
               child: Text('Continue'),

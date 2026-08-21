@@ -5,6 +5,7 @@ import 'package:face_liveness_flutter_sdk/models/liveness_error_model.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_flow.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_localization.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_screen_type.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_session_status.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -26,6 +27,7 @@ class FaceLivenessWidget extends StatefulWidget {
     this.onAnalysisComplete,
     this.onScreenChange,
     this.onContinue,
+    this.onSessionStatusChange,
     super.key,
   });
 
@@ -67,6 +69,9 @@ class FaceLivenessWidget extends StatefulWidget {
 
   /// When provided, renders a "Continue" button on the success screen that calls this.
   final void Function()? onContinue;
+
+  /// Called after the SDK validates the token/session state. status indicates the session state, and isEligible indicates whether the session is eligible for verification.
+  final void Function(LivenessSessionStatus?)? onSessionStatusChange;
 
   @override
   State<FaceLivenessWidget> createState() => _FaceLivenessWidgetState();
@@ -175,6 +180,21 @@ class _FaceLivenessWidgetState extends State<FaceLivenessWidget> {
           handlerName: 'onContinue',
           callback: (args) {
             widget.onContinue?.call();
+          },
+        );
+
+        controller.addJavaScriptHandler(
+          handlerName: 'onSessionStatusChange',
+          callback: (args) {
+            print(args);
+            if (args.isNotEmpty && args[0] is Map<String, dynamic>) {
+              if (args[0].containsKey('result')) {
+                Map<String, dynamic> result = args[0]['result'];
+                LivenessSessionStatus livenessStatus =
+                    LivenessSessionStatus.fromJson(result);
+                widget.onSessionStatusChange?.call(livenessStatus);
+              }
+            }
           },
         );
       },

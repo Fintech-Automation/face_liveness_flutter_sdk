@@ -2,6 +2,7 @@ import 'package:face_liveness_flutter_sdk/face_liveness_flutter_sdk.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_brand.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_flow.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_localization.dart';
+import 'package:face_liveness_flutter_sdk/models/liveness_session_status.dart';
 import 'package:face_liveness_flutter_sdk/models/liveness_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -85,6 +86,16 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
         onError: (error) => print('Liveness check error: ${error?.toJson()}'),
         onScreenChange: (screen) => print('to Liveness Screen: ${screen}'),
         onAnalysisComplete: () => print('Liveness check Analysis Complete'),
+        onSessionStatusChange: (status) {
+          print('Liveness check Session Status: ${status?.toJson()}');
+          if (status?.status == SessionStatus.readyRetryLimitExceeded ||
+              status?.status == SessionStatus.expired ||
+              status?.status == SessionStatus.invalid) {
+            Future.delayed(const Duration(milliseconds: 2500), () {
+              Navigator.of(context).pop(status?.status?.displayName);
+            });
+          }
+        },
       ),
     );
   }
