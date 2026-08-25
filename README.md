@@ -75,7 +75,7 @@ correctly without valid values for them.
 | `onError`    | `void Function(LivenessErrorModel?)`      | No       | none           | Called when a session, camera, capture, or result-fetch error occurs. |
 | `onCancel`    | `void Function()`      | No       | none           | Called when the user cancels the live capture flow. |
 | `onAnalysisComplete`    | `void Function()`      | No       | none           | Called when the capture detector finishes analysis and the SDK begins fetching backend results. |
-| `onSessionStatusChange` | `void Function(LivenessSessionStatus?)?`    | Called after the SDK validates the token/session state. status indicates the session state, and isEligible indicates whether the session is eligible for verification. |
+| `onSessionStatusChange` | `void Function(LivenessSessionStatus?)?` | No       | none              | Called after the SDK validates the token/session state. status indicates the session state, and isEligible indicates whether the session is eligible for verification. |
 | `onScreenChange`    | `void Function(LivenessScreenType?)`      | No       | none           | Called when the flow changes screens. |
 | `onContinue`    | `void Function()`      | No       | none           | Called when the user taps Continue on the success screen. |
 
